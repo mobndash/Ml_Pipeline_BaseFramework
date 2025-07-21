@@ -10,3 +10,11 @@ Pre - Setup project with Github, Logger, Exceptions
 
 CI/CD Pipelines - Github Actions
 Deployment - AWS
+
+
+************************************************************************************************************************************************************************************
+setup.py
+
+This file is essential for packaging and distributing a Python project. It defines your project’s metadata and dependencies, and allows tools like pip to install it.
+
+************************************************************************************************************************************************************************************
