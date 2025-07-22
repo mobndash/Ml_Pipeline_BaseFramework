@@ -1,5 +1,6 @@
 #  For acccessing exception traceback info
 import sys
+# from src.logger import logging
 
 def error_message_detail(error, error_detail : sys) :
     """
@@ -33,4 +34,12 @@ class CustomException(Exception) :
         When the exception is printed or converted to string, return the custom detailed message.
         """
         return self.error_message
+
+# Testing logger.py and exception.py
+# if __name__ == "__main__" :
+#     try :
+#         a = 1/0
     
+#     except Exception as e :
+#         logging.info("Divide  by zero")
+#         raise CustomException(e, sys)
