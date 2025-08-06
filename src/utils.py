@@ -12,7 +12,7 @@ import numpy as np
 import dill
 import pickle
 from sklearn.metrics import r2_score
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 # dave preprocessing file as preprocessor object
 
@@ -37,23 +37,39 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
         report = {}
 
         for i in range(len(list(models))):
+
             # retrieve the models
             model = list(models.values())[i]
-            # retrieve the model names
+
+            # retrieve the model names for GridSearchCV
             para = param[list(models.keys())[i]]
+
+            # optional param for RandomizedSearchCV
+            # param_grid = param[list(models.keys())[i]]
 
             # GridSearch calculate the best parameters
             gs = GridSearchCV(model, para, cv=3)
             gs.fit(X_train, y_train)
 
-            # sets the best parameters for the model
+            # rs = RandomizedSearchCV(
+            #     model, param_grid, n_iter=10, cv=3, n_jobs=-1, verbose=0, random_state=42)
+            # rs.fit(X_train, y_train)
+
+            # sets the best parameters for the model GSCV
             model.set_params(**gs.best_params_)
+
+            # sets the best parameters for the model RSCV
+            # model.set_params(**rs.best_params_)
+
+            logging.info(
+                f"{list(models.keys())[i]} Best Params: {gs.best_params_}")
+
+            # logging.info(
+            #     f"{list(models.keys())[i]} Best Params: {rs.best_params_}")
 
             logging.info("Model Training started")
 
             model.fit(X_train, y_train)
-
-            # model.fit(X_train, y_train)  # Train model
 
             y_train_pred = model.predict(X_train)
 
@@ -62,6 +78,12 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
             train_model_score = r2_score(y_train, y_train_pred)
 
             test_model_score = r2_score(y_test, y_test_pred)
+
+            logging.info(
+                f"{list(models.keys())[i]} Best Params: {gs.best_params_}")
+
+            # logging.info(
+            #     f"{list(models.keys())[i]} Best Params: {rs.best_params_}")
 
             # saves and returns the report with model namees and r2 score above 60%
             report[list(models.keys())[i]] = test_model_score
